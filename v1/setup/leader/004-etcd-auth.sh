@@ -5,8 +5,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source /etc/environment
 source $DIR/../../lib/helpers.sh
 
-exit 0
-
 echo "-------Leader node, beginning etcd auth setup-------"
 
 etcd-set /etcdctl/config/root-user root
@@ -71,7 +69,7 @@ sudo echo '{"user": "'${WRITE_USERNAME}'", "grant": ["read-write"]}' > $CRED_DIR
 curl -L http://127.0.0.1:2379/v2/auth/users/${WRITE_USERNAME} -XPUT -d "@$CRED_DIR/read-write.json"
 
 # Enable authentication
-etcdctl auth enable
+curl  -L http://127.0.0.1:2379/v2/auth/enable -XPUT
 
 sudo rm -rf $CRED_DIR
 
