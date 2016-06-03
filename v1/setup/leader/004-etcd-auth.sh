@@ -5,7 +5,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source /etc/environment
 source $DIR/../../lib/helpers.sh
 
-exit 0
 
 echo "-------Leader node, beginning etcd auth setup-------"
 
