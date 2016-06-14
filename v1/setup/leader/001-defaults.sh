@@ -100,6 +100,15 @@ etcd-set /flight-director/config/allow-marathon-unverified-tls false
 etcd-set /flight-director/config/mesos-master-protocol http
 etcd-set /flight-director/config/authorizer-type airlock
 
+######################
+#  AUQA
+######################
+
+etcd-set /aqua/config/db-path "$POSTGRES_DB_PATH"
+etcd-set /aqua/config/db-name "$POSTGRES_DB_NAME"
+etcd-set /aqua-audit/config/db-path "$OSTGRES_AUDIT_DB_PATH"
+etcd-set /aqua-audit/config/db-name "$POSTGRES_AUDIT_DB_NAME"
+
 
 ######################
 #     ZOOKEEPER

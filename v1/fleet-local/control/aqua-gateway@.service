@@ -1,0 +1,34 @@
+Unit]
+Description=Install Scalock Gateway
+After=docker.service bootstrap.service
+Requires=docker.service
+
+
+[Service]
+User=core
+TimeoutStartSec=0
+Environment="dbpassword=etcdctl get /scalock/config/db-password"
+Environment="dbusername=etcdctl get /flight-director/config/db-username"
+Environment="scalockdbname=etcdctl get /aqua/config/db-name"
+Environment="scalockdb_endpoint=etcdctl get /aqua/config/db-path"
+Environment="scalock_audit_dbname=etcdctl get /aqua-audit/config/db-name"
+Environment="scalock_audit_db_endpoint=etcdctl get /aqua-audit/config/db-path"
+
+ExecStartPre=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh"
+
+
+ExecStart=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh && \
+  sudo docker run -d -p 3622:3622 --name scalock-gateway  \
+  -e SCALOCK_DBUSER=$($dbusername)  \
+  -e SCALOCK_DBPASSWORD=$($dbpassword)   \
+  -e SCALOCK_DBNAME=$($scalockdbname)    \
+  -e SCALOCK_DBHOST=$($scalockdb_endpoint) \
+  -e SCALOCK_AUDIT_DBUSER=$($dbusername)  \
+  -e SCALOCK_AUDIT_DBPASSWORD=$($dbpassword)   \
+  -e SCALOCK_AUDIT_DBNAME=$($scalock_audit_dbname)    \
+  -e SCALOCK_AUDIT_DBHOST=$($scalock_audit_db_endpoint)
+  scalock/scalock-gateway:stable"
+
+[X-Fleet]
+Global=true
+
