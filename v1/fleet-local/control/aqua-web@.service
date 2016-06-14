@@ -1,6 +1,6 @@
 [Unit]
 Description=Install Scalock UI
-After=docker.service bootstrap.service
+After=docker.service bootstrap.service aqua-gateway.service
 Requires=docker.service
 
 

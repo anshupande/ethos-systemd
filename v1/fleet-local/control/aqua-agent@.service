@@ -1,6 +1,6 @@
 Unit]
 Description=Install Scalock Gateway
-After=docker.service bootstrap.service
+After=docker.service bootstrap.service aqua-web.service aqua-gateway.service
 Requires=docker.service
 
 
