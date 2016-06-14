@@ -13,6 +13,7 @@ Environment="scalockdbname=etcdctl get /aqua/config/db-name"
 Environment="scalockdb_endpoint=etcdctl get /aqua/config/db-path"
 Environment="scalock_audit_dbname=etcdctl get /aqua-audit/config/db-name"
 Environment="scalock_audit_db_endpoint=etcdctl get /aqua-audit/config/db-path"
+Environment="scalock_token=etcdctl get /aqua/config/aqua-token"
 
 ExecStartPre=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh"
 
@@ -30,7 +31,7 @@ ExecStart=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh && \
    -e SCALOCK_AUDIT_DBHOST=$($scalock_audit_db_endpoint)
    -e SCALOCK_KERNEL_MODE_ENABLED=false  \
    -e ADMIN_PASSWORD=Demo \
-   -e BATCH_INSTALL_TOKEN="M8@r3bfH#q" \
+   -e BATCH_INSTALL_TOKEN="$($scalock_token)" \
    -e BATCH_INSTALL_NAME=Local-Agents \
    -e BATCH_INSTALL_GATEWAY=localhost \
    -e BATCH_INSTALL_ENFORCE_MODE=y \
