@@ -8,7 +8,7 @@ Requires=docker.service
 User=core
 TimeoutStartSec=0
 Environment="IMAGE=etcdctl get /images/scalock-server"
-Environment="ADMIN_PASSWORD=etcdctl get /aqua/config/password"
+Environment="SCALOCK_ADMIN_PASSWORD=etcdctl get /aqua/config/password"
 Environment="DB_PASSWORD=etcdctl get /scalock/config/db-password"
 Environment="DB_USERNAME=etcdctl get /flight-director/config/db-username"
 Environment="SCALOCKDBNAME=etcdctl get /aqua/config/db-name"
@@ -35,7 +35,7 @@ ExecStart=/usr/bin/sh -c "sudo docker run -d -p 8083:8080 -p 80:8080 -p 443:8443
    -e SCALOCK_AUDIT_DBNAME=$($SCALOCK_AUDIT_DBNAME)    \
    -e SCALOCK_AUDIT_DBHOST=$($SCALOCK_AUDIT_DB_ENDPOINT)
    -e SCALOCK_KERNEL_MODE_ENABLED=false  \
-   -e ADMIN_PASSWORD=$($ADMIN_PASSWORD) \
+   -e ADMIN_PASSWORD=$($SCALOCK_ADMIN_PASSWORD) \
    -e BATCH_INSTALL_TOKEN="$($SCALOCK_TOKEN)" \
    -e BATCH_INSTALL_NAME=Local-Agents \
    -e BATCH_INSTALL_GATEWAY=$(eval echo $COREOS_PRIVATE_IPV4) \
