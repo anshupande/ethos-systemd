@@ -39,5 +39,5 @@ ExecStart=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh && \
    --link scalock-gateway    scalock/scalock-server:stable"
 
 [X-Fleet]
-Global=true
-
+Global=false
+MachineMetadata=role=control
