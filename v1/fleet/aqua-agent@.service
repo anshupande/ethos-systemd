@@ -14,7 +14,7 @@ ExecStartPre=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh"
 
 ExecStart=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh && \
   sudo docker run --rm -ti \
-  -e SCALOCK_SERVER=<GATEWAY ADDRESS> \
+  -e SCALOCK_SERVER=$(eval echo $COREOS_PRIVATE_IPV4) \
   -e SCALOCK_TOKEN=$($scalock_token) \
   -e SILENT=yes \
   -v /var/run/docker.sock:/var/run/docker.sock \

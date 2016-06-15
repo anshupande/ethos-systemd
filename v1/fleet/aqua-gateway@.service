@@ -30,7 +30,4 @@ ExecStart=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh && \
   scalock/scalock-gateway:stable"
 
 [X-Fleet]
-Global=false
-MachineMetadata=role=control
-MachineMetadata=ip=%i
-
+Global=true
