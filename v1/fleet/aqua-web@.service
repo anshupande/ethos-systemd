@@ -41,7 +41,7 @@ ExecStart=/usr/bin/sh -c "sudo docker run -d -p 8083:8080 -p 80:8080 -p 443:8443
    -e BATCH_INSTALL_GATEWAY=$(eval echo $COREOS_PRIVATE_IPV4) \
    -e BATCH_INSTALL_ENFORCE_MODE=y \
    -v /var/run/docker.sock:/var/run/docker.sock  \
-   --link scalock-gateway    $($IMAGE)"
+   --link scalock-gateway  scalock/scalock-server:stable"
 
 [X-Fleet]
 Global=false

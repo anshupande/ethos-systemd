@@ -22,7 +22,7 @@ ExecStart=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh && \
   -e SCALOCK_TOKEN=$($SCALOCK_TOKEN) \
   -e SILENT=yes \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  $($IMAGE)"
+  scalock/scalock-agent:stable"
 
 [[X-Fleet]
 Global=true

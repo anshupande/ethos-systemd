@@ -31,7 +31,7 @@ ExecStart=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh && \
   -e SCALOCK_AUDIT_DBPASSWORD=$($DB_PASSWORD)   \
   -e SCALOCK_AUDIT_DBNAME=$($SCALOCK_AUDIT_DBNAME)    \
   -e SCALOCK_AUDIT_DBHOST=$($SCALOCK_AUDIT_DB_ENDPOINT)
-  $($IMAGE)"
+  scalock/scalock-gateway:stable"
 
 [X-Fleet]
 Global=true
