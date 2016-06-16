@@ -109,9 +109,9 @@ etcd-set /aqua/config/db-name "$POSTGRES_DB_NAME"
 etcd-set /aqua-audit/config/db-path "$POSTGRES_AUDIT_DB_PATH"
 etcd-set /aqua-audit/config/db-name "$POSTGRES_AUDIT_DB_NAME"
 etcd-set /aqua/config/aqua-token "$AQUA_TOKEN"
-etcd-set /images/scalock-gateway  "index.docker.io/adobeplatform/scalock-gateway:stable"
-etcd-set /images/scalock-agent  "index.docker.io/adobeplatform/scalock-agent:stable"
-etcd-set /images/scalock-server  "index.docker.io/adobeplatform/scalock-server:stable"
+#etcd-set /images/scalock-gateway  "index.docker.io/adobeplatform/scalock-gateway:stable"
+#etcd-set /images/scalock-agent  "index.docker.io/adobeplatform/scalock-agent:stable"
+#etcd-set /images/scalock-server  "index.docker.io/adobeplatform/scalock-server:stable"
 etcd-set /aqua/config/password "password"
 
 
