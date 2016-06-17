@@ -7,7 +7,8 @@ Requires=docker.service
 [Service]
 User=core
 TimeoutStartSec=0
-Environment="DB_PASSWORD=etcdctl get /flight-director/config/db-password"
+Environment="IMAGE=etcdctl get /images/scalock-gateway"
+Environment="DB_PASSWORD=etcdctl get /environment/RDSPASSWORD"
 Environment="DB_USERNAME=etcdctl get /flight-director/config/db-username"
 Environment="SCALOCK_DBNAME=etcdctl get /aqua/config/db-name"
 Environment="SCALOCK_DB_ENDPOINT=etcdctl get /aqua/config/db-path"
@@ -32,7 +33,7 @@ ExecStart=/usr/bin/bash -c \
   -e SCALOCK_AUDIT_DBPASSWORD=$($DB_PASSWORD)   \
   -e SCALOCK_AUDIT_DBNAME=$($SCALOCK_AUDIT_DBNAME)    \
   -e SCALOCK_AUDIT_DBHOST=$($SCALOCK_AUDIT_DB_ENDPOINT)
-  scalock/scalock-gateway:stable"
+  $($IMAGE)"
 
 [X-Fleet]
 Global=true

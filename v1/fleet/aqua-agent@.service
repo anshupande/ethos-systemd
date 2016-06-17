@@ -8,10 +8,11 @@ Requires=docker.service
 User=core
 TimeoutStartSec=0
 Environment="SCALOCK_TOKEN=etcdctl get /aqua/config/aqua-token"
+Environment="IMAGE=etcdctl get /images/scalock-agent"
 
 ExecStartPre=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh"
 ExecStartPre=/usr/bin/sh -c \
-"if [[ -f /etc/profile.d/etcdctl.sh ]]; then source /etc/profile.d/etcdctl.sh;fi && docker pull scalock/scalock-agent:stable"
+"if [[ -f /etc/profile.d/etcdctl.sh ]]; then source /etc/profile.d/etcdctl.sh;fi && docker pull $($IMAGE)"
 ExecStartPre=-/usr/bin/docker kill scalock-agent
 ExecStartPre=-/usr/bin/docker rm scalock-agent
 
@@ -23,7 +24,7 @@ ExecStart=/usr/bin/bash -c \
   -e SCALOCK_TOKEN=$($SCALOCK_TOKEN) \
   -e SILENT=yes \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  scalock/scalock-agent:stable"
+  $($IMAGE)"
 
 [[X-Fleet]
 Global=true
