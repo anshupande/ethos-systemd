@@ -1,6 +1,6 @@
 [Unit]
-Description=Install Scalock UI
-After=docker.service bootstrap.service aqua-gateway.service
+Description=Install Scalock UI @ %i
+After=docker.service bootstrap.service aqua-gateway@%i.service
 Requires=docker.service
 
 
@@ -17,14 +17,20 @@ Environment="SCALOCK_AUDIT_DBNAME=etcdctl get /aqua-audit/config/db-name"
 Environment="SCALOCK_AUDIT_DB_ENDPOINT=etcdctl get /aqua-audit/config/db-path"
 Environment="SCALOCK_TOKEN=etcdctl get /aqua/config/aqua-token"
 
-ExecStartPre=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh"
+EnvironmentFile=/etc/environment
+Type=simple
+Restart=always
+RestartSec=4
+
+ExecStartPre=/usr/bin/systemctl is-active update-os.service
+ExecStartPre=/usr/bin/systemctl is-active zk-health.service
 ExecStartPre=/usr/bin/sh -c "docker pull $($IMAGE))"
-ExecStartPre=-/usr/bin/docker kill scalock-web
-ExecStartPre=-/usr/bin/docker rm scalock-web
+ExecStartPre=-/usr/bin/docker kill aqua-web
+ExecStartPre=-/usr/bin/docker rm aqua-web
 
 
 ExecStart=/usr/bin/sh -c "sudo docker run -d -p 8083:8080 -p 80:8080 -p 443:8443 -p 8443:8443 \
-   --name scalock-web --user=root \
+   --name aqua-web --user=root \
    -e SCALOCK_DBUSER=$($DB_USERNAME)  \
    -e SCALOCK_DBPASSWORD=$($DB_PASSWORD)   \
    -e SCALOCK_DBNAME=$($SCALOCKDBNAME)    \
@@ -33,7 +39,7 @@ ExecStart=/usr/bin/sh -c "sudo docker run -d -p 8083:8080 -p 80:8080 -p 443:8443
    -e SCALOCK_AUDIT_DBUSER=$($DB_USERNAME)  \
    -e SCALOCK_AUDIT_DBPASSWORD=$($DB_PASSWORD)   \
    -e SCALOCK_AUDIT_DBNAME=$($SCALOCK_AUDIT_DBNAME)    \
-   -e SCALOCK_AUDIT_DBHOST=$($SCALOCK_AUDIT_DB_ENDPOINT)
+   -e SCALOCK_AUDIT_DBHOST=$($SCALOCK_AUDIT_DB_ENDPOINT) \
    -e SCALOCK_KERNEL_MODE_ENABLED=false  \
    -e ADMIN_PASSWORD=$($SCALOCK_ADMIN_PASSWORD) \
    -e BATCH_INSTALL_TOKEN="$($SCALOCK_TOKEN)" \
@@ -41,7 +47,12 @@ ExecStart=/usr/bin/sh -c "sudo docker run -d -p 8083:8080 -p 80:8080 -p 443:8443
    -e BATCH_INSTALL_GATEWAY=${COREOS_PRIVATE_IPV4} \
    -e BATCH_INSTALL_ENFORCE_MODE=y \
    -v /var/run/docker.sock:/var/run/docker.sock  \
-   --link scalock-gateway  $($IMAGE)"
+   --link aqua-gateway  $($IMAGE)"
+
+ExecStop=/usr/bin/docker stop aqua-web
+
+[Install]
+WantedBy=multi-user.target
 
 [X-Fleet]
 Global=false
