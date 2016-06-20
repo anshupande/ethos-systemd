@@ -33,4 +33,6 @@ ExecStop=-/usr/bin/docker stop aqua-agent
 WantedBy=multi-user.target
 
 [[X-Fleet]
-Global=true
+Global=false
+MachineMetadata=role=worker
+MachineMetadata=ip=%i
