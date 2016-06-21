@@ -40,6 +40,10 @@ EOF
 
 # TODO: retrying of below etcd commands
 
+# ETCD Authentication user
+root = "$(echo "$(cat /opt/etcdctl/root.json |jq '.user')" | sed -e 's/^"//'  -e 's/"$//')"
+password = "$(echo "$(cat /opt/etcdctl/root.json |jq '.password')" | sed -e 's/^"//'  -e 's/"$//')""
+
 add_users $ROOT_USERNAME $ROOT_PASSWORD
 add_users $READ_USERNAME $READ_PASSWORD
 add_users $WRITE_USERNAME $WRITE_PASSWORD
