@@ -41,8 +41,8 @@ EOF
 # TODO: retrying of below etcd commands
 
 # ETCD Authentication user
-root = "$(echo "$(cat /opt/etcdctl/root.json |jq '.user')" | sed -e 's/^"//'  -e 's/"$//')"
-password = "$(echo "$(cat /opt/etcdctl/root.json |jq '.password')" | sed -e 's/^"//'  -e 's/"$//')""
+ETCD_USER = "$(echo "$(cat /opt/etcdctl/root.json |jq '.user')" | sed -e 's/^"//'  -e 's/"$//')"
+ETCD_PASSWORD = "$(echo "$(cat /opt/etcdctl/root.json |jq '.password')" | sed -e 's/^"//'  -e 's/"$//')"
 
 add_users $ROOT_USERNAME $ROOT_PASSWORD
 add_users $READ_USERNAME $READ_PASSWORD
@@ -77,5 +77,11 @@ curl -L http://127.0.0.1:2379/v2/auth/users/${WRITE_USERNAME} -XPUT -d "@$CRED_D
 etcdctl auth enable
 
 sudo rm -rf $CRED_DIR
+
+
+# revoke guest role
+# etcdctl -u $ETCD_USER:$ETCD_PASSWORD role revoke guest -path '/*' -readwrite
+# use username password to make etcd calls
+# etcdctl -u $ETCD_USER:$ETCD_PASSWORD role get guest
 
 echo "-------Leader node, done etcd auth setup-------"
