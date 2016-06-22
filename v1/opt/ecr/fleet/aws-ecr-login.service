@@ -7,7 +7,7 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-Environment="IMAGE=etcdctl get /images/ecr-login"
+Environment="IMAGE=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /images/ecr-login"
 EnvironmentFile=/etc/environment
 User=core
 ExecStartPre=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh && docker pull $($IMAGE)"
@@ -16,13 +16,13 @@ ExecStartPre=-/usr/bin/docker rm -f ecr-login
 # ecr-login fetches ECR creds and formats them correctly for .dockercfg
 ExecStart=/bin/bash -c \
     'source /etc/profile.d/etcdctl.sh && \
-    if [[ -n `etcdctl get /ECR/config/registry-account` ]]; then \
+    if [[ -n `etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /ECR/config/registry-account` ]]; then \
     docker run \
     --label com.swipely.iam-docker.iam-profile="$CONTAINERS_ROLE" \
     --name ecr-login \
     -e "TEMPLATE=templates/dockercfg.tmpl" \
-    -e "AWS_REGION=`etcdctl get /ECR/config/region`" \
-    -e "REGISTRIES=`etcdctl get /ECR/config/registry-account`" \
+    -e "AWS_REGION=`etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /ECR/config/region`" \
+    -e "REGISTRIES=`etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /ECR/config/registry-account`" \
     $($IMAGE) >/home/core/.dockercfg; \
     fi'
 ExecStop=/usr/bin/docker stop ecr-login

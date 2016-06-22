@@ -8,7 +8,7 @@ After=docker.service bootstrap.service
 # CONTROL_ELB should be set in etcd
 # It should be run on all mesos master nodes
 # Look at adobeplatform/docker-dd-agent-mesos-master for what ports those 3 should be running on
-Environment="IMAGE=etcdctl get /images/dd-agent-mesos-master"
+Environment="IMAGE=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /images/dd-agent-mesos-master"
 User=core
 Restart=always
 TimeoutStartSec=0
@@ -20,10 +20,10 @@ ExecStart=/usr/bin/bash -c \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -v /proc/:/host/proc/:ro \
 -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
--e API_KEY=`etcdctl get /datadog/config/api-key` \
+-e API_KEY=`etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /datadog/config/api-key` \
 -e HOST_IP=`hostname -i` \
--e MARATHON_USERNAME=`etcdctl get /marathon/config/username` \
--e MARATHON_PASSWORD=`etcdctl get /marathon/config/password` \
+-e MARATHON_USERNAME=`etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /marathon/config/username` \
+-e MARATHON_PASSWORD=`etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /marathon/config/password` \
 $($IMAGE)"
 ExecStop=/usr/bin/docker stop dd-agent-mesos-master
 

@@ -5,7 +5,7 @@ Description=Datadog Agent
 After=docker.service bootstrap.service
 
 [Service]
-Environment="IMAGE=etcdctl get /images/dd-agent"
+Environment="IMAGE=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /images/dd-agent"
 User=core
 Restart=always
 TimeoutStartSec=0
@@ -21,7 +21,7 @@ ExecStart=/usr/bin/bash -c \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -v /proc/:/host/proc/:ro \
 -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
--e API_KEY=`etcdctl get /datadog/config/api-key` \
+-e API_KEY=`etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /datadog/config/api-key` \
 $($IMAGE)"
 ExecStop=/usr/bin/docker stop dd-agent
 

@@ -80,7 +80,7 @@ sudo rm -rf $CRED_DIR
 
 
 # revoke guest role
-# etcdctl -u $ETCD_USER:$ETCD_PASSWORD role revoke guest -path '/*' -readwrite
+etcdctl -u $ETCD_USER:$ETCD_PASSWORD role revoke guest -path '/*' -readwrite
 # use username password to make etcd calls
 # etcdctl -u $ETCD_USER:$ETCD_PASSWORD role get guest
 

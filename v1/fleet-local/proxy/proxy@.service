@@ -9,9 +9,9 @@ User=core
 Restart=always
 RestartSec=5
 TimeoutStartSec=0
-Environment="IMAGE=etcdctl get /images/proxy"  
-Environment="PROXY=etcdctl get /capcom/config/proxy"  
-Environment="CMD=etcdctl get /capcom/config/proxy-docker-command"
+Environment="IMAGE=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /images/proxy"
+Environment="PROXY=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /capcom/config/proxy"
+Environment="CMD=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /capcom/config/proxy-docker-command"
 
 ExecStartPre=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh && docker pull $($IMAGE)"
 ExecStartPre=-/usr/bin/docker kill proxy

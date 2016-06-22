@@ -7,14 +7,14 @@ fi
 
 # Handle retrying of all etcd sets and gets
 function etcd-set() {
-    etcdctl set "$@"
-    while [ $? != 0 ]; do sleep 1; etcdctl set $@; done
+    etcdctl -u $ETCD_USER:$ETCD_PASSWORD set "$@"
+    while [ $? != 0 ]; do sleep 1; etcdctl -u $ETCD_USER:$ETCD_PASSWORD set $@; done
 }
 
 function etcd-get() {
-    etcdctl get "$@"
+    etcdctl -u $ETCD_USER:$ETCD_PASSWORD get "$@"
     # "0" and "4" responses were successful, "4" means the key intentionally doesn't exist
-    while [[ $? != 0 && $? != 4 ]]; do sleep 1; etcdctl get $@; done
+    while [[ $? != 0 && $? != 4 ]]; do sleep 1; etcdctl -u $ETCD_USER:$ETCD_PASSWORD get $@; done
 }
 
 # Handle retrying of all fleet submits and starts
