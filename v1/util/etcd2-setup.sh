@@ -27,8 +27,7 @@ systemctl start etcd-peers
 
 echo "-------Waiting for etcd2 to start-------"
 
-  sudo -E docker run \
-while [[ $(etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD cluster-health|grep unhealthy) || $(etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD member list | wc -l) -lt $CONTROL_CLUSTER_SIZE ]]
+while [[ $(etcdctl cluster-health|grep unhealthy) || $(etcdctl member list | wc -l) -lt $CONTROL_CLUSTER_SIZE ]]
 do
   sleep 8
 done
