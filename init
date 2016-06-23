@@ -37,12 +37,12 @@ function leader-setup() {
 
   LEADER="true"
 
-curl  -L http://127.0.0.1:2379/v2/auth/enable -XGET > /opt/etcdctl/auth
+  curl  -L http://127.0.0.1:2379/v2/auth/enable -XGET > /opt/etcdctl/auth
 
-if [[ $(echo "$(cat /opt/etcdctl/auth |jq '.enabled')" | sed -e 's/^"//'  -e 's/"$//') = false ]]; then
-  etcd-set /bootstrap.service/leader-status started; else
-  etcd-authset /bootstrap.service/leader-status started
-fi
+  if [[ $(echo "$(cat /opt/etcdctl/auth |jq '.enabled')" | sed -e 's/^"//'  -e 's/"$//') = false ]]; then
+    etcd-set /bootstrap.service/leader-status started; else
+    etcd-authset /bootstrap.service/leader-status started
+  fi
 
   for script in $(ls ${SCRIPTDIR}/$VERSION/setup/leader|grep -e '.sh$')
   do
@@ -51,12 +51,12 @@ fi
 
   echo "-------Leader node, writing finished flag to etcd-------"
 
-curl  -L http://127.0.0.1:2379/v2/auth/enable -XGET > /opt/etcdctl/auth
+  curl  -L http://127.0.0.1:2379/v2/auth/enable -XGET > /opt/etcdctl/auth
 
-if [[ $(echo "$(cat /opt/etcdctl/auth |jq '.enabled')" | sed -e 's/^"//'  -e 's/"$//') = false ]]; then
-  etcd-set /bootstrap.service/leader-status finished; else
-  etcd-authset /bootstrap.service/leader-status finished
-fi
+  if [[ $(echo "$(cat /opt/etcdctl/auth |jq '.enabled')" | sed -e 's/^"//'  -e 's/"$//') = false ]]; then
+    etcd-set /bootstrap.service/leader-status finished; else
+    etcd-authset /bootstrap.service/leader-status finished
+  fi
 
 
   echo "-------Leader node, leader is finished, continuing bootstrap-------"
@@ -66,12 +66,12 @@ function follower-setup() {
   # Wait until etcd bootstrap value is set
   # This ensures that the etcd cluster is healthy and replicated on workers and proxy
 
-curl  -L http://127.0.0.1:2379/v2/auth/enable -XGET > /opt/etcdctl/auth
+  curl  -L http://127.0.0.1:2379/v2/auth/enable -XGET > /opt/etcdctl/auth
 
-if [[ $(echo "$(cat /opt/etcdctl/auth |jq '.enabled')" | sed -e 's/^"//'  -e 's/"$//') = false ]]; then
-  status=`etcd-set /bootstrap.service/leader-status finished`; else
-  status=`etcd-authset /bootstrap.service/leader-status finished`
-fi
+  if [[ $(echo "$(cat /opt/etcdctl/auth |jq '.enabled')" | sed -e 's/^"//'  -e 's/"$//') = false ]]; then
+    status=`etcd-set /bootstrap.service/leader-status finished`; else
+    status=`etcd-authset /bootstrap.service/leader-status finished`
+  fi
 
 
   while [[ $status != "finished" ]]
