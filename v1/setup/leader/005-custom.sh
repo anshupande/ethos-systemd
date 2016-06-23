@@ -26,7 +26,7 @@ echo "$AV_SECRETS" | while read line ; do
         continue
     fi
 
-    etcd-set -- $SECRET_PATH "$SECRET_VAL"
+    etcd-authset -- $SECRET_PATH "$SECRET_VAL"
 done
 
 echo "$AV_CONFIGS" | while read line ; do
@@ -34,15 +34,15 @@ echo "$AV_CONFIGS" | while read line ; do
     CONFIG_PATH=`echo $CONFIG | cut -d' ' -f1`
     CONFIG_VAL=`echo $CONFIG | cut -d' ' -f2-`
 
-    etcd-set -- $CONFIG_PATH "$CONFIG_VAL"
+    etcd-authset -- $CONFIG_PATH "$CONFIG_VAL"
 done
 
 # Create a dockercfg in etcd
 DOCKERCFG_CONTENTS=$($DL_TABLE --key secrets --name DOCKERCFG --format plain)
-etcd-set -- /docker/config/dockercfg "$DOCKERCFG_CONTENTS"
+etcd-authset -- /docker/config/dockercfg "$DOCKERCFG_CONTENTS"
 
 # Set the RDS Password
 RDSPASSWORD=$($DL_TABLE --key secrets --name RDSPASSWORD --format plain)
-etcd-set -- /environment/RDSPASSWORD "$RDSPASSWORD"
+etcd-authset -- /environment/RDSPASSWORD "$RDSPASSWORD"
 
 echo "-------Leader node, done writing custom values to etcd-------"
