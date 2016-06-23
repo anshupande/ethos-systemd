@@ -5,12 +5,12 @@ After=docker.service bootstrap.service zk-health.service mesos-master@%i.service
 
 [Service]
 Environment=ZOOKEEPER_HOST=localhost:2181
-Environment="IMAGE=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /images/marathon"
-Environment="USER=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /marathon/config/username"
-Environment="PASSWORD=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /marathon/config/password"
-Environment="MESOS_USERNAME=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /mesos/config/username"
-Environment="ZK_USERNAME=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /zookeeper/config/username"
-Environment="ZK_PASSWORD=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /zookeeper/config/password"
+Environment="IMAGE=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /images/marathon"
+Environment="USER=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /marathon/config/username"
+Environment="PASSWORD=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /marathon/config/password"
+Environment="MESOS_USERNAME=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /mesos/config/username"
+Environment="ZK_USERNAME=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /zookeeper/config/username"
+Environment="ZK_PASSWORD=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /zookeeper/config/password"
 
 User=core
 Restart=always

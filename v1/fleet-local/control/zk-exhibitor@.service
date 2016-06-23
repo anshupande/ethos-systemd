@@ -6,7 +6,7 @@ Before=zk-health.service
 Wants=zk-health.service
 
 [Service]
-Environment="IMAGE=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /images/zk-exhibitor"
+Environment="IMAGE=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /images/zk-exhibitor"
 
 User=core
 Restart=always
@@ -26,10 +26,10 @@ ExecStart=/usr/bin/bash -c "sudo docker run \
   -p 3888:3888 \
   -v /opt/zookeeper/transactions:/opt/zookeeper/transactions \
   -v /opt/zookeeper/snapshots:/opt/zookeeper/snapshots \
-  -e S3_PREFIX=$(etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /zookeeper/config/exhibitor/s3-prefix) \
-  -e S3_BUCKET=$(etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /zookeeper/config/exhibitor/s3-bucket) \
-  -e ZK_ENSEMBLE_SIZE=$(etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /zookeeper/config/ensemble-size) \
-  -e ZK_PASSWORD=$(etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /zookeeper/config/password) \
+  -e S3_PREFIX=$(etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /zookeeper/config/exhibitor/s3-prefix) \
+  -e S3_BUCKET=$(etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /zookeeper/config/exhibitor/s3-bucket) \
+  -e ZK_ENSEMBLE_SIZE=$(etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /zookeeper/config/ensemble-size) \
+  -e ZK_PASSWORD=$(etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /zookeeper/config/password) \
   -e AWS_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document|jq .region) \
   -e HOSTNAME=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4) \
   $($IMAGE)"

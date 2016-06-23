@@ -5,7 +5,7 @@ Description=Datadog Agent for proxy things
 After=docker.service bootstrap.service
 
 [Service]
-Environment="IMAGE=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /images/dd-agent-proxy"
+Environment="IMAGE=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /images/dd-agent-proxy"
 User=core
 Restart=always
 RestartSec=10
@@ -18,8 +18,8 @@ ExecStart=/usr/bin/bash -c \
 "if [[ -f /etc/profile.d/etcdctl.sh ]]; then source /etc/profile.d/etcdctl.sh;fi && \
 sudo -E /usr/bin/docker run --name dd-agent-proxy \
 --net='host' \
--e API_KEY=`etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /datadog/config/api-key` \
--e PROXY=`etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /capcom/config/proxy` \
+-e API_KEY=`etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /datadog/config/api-key` \
+-e PROXY=`etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /capcom/config/proxy` \
 $($IMAGE)"
 ExecStop=/usr/bin/docker stop dd-agent-proxy
 

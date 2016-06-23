@@ -4,8 +4,8 @@ Requires=docker.service
 After=docker.service bootstrap.service zk-health.service
 
 [Service]
-Environment="IMAGE=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /images/control-proxy"
-Environment="INTERNAL_CONTROL_ELB=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /environment/CONTROL_ELB"
+Environment="IMAGE=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /images/control-proxy"
+Environment="INTERNAL_CONTROL_ELB=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /environment/CONTROL_ELB"
 EnvironmentFile=/etc/environment
 User=core
 Type=simple

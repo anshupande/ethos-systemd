@@ -7,14 +7,14 @@ fi
 
 # Handle retrying of all etcd sets and gets
 function etcd-authset() {
-    etcdctl -u $ETCD_USER:$ETCD_PASSWORD set "$@"
-    while [ $? != 0 ]; do sleep 1; etcdctl -u $ETCD_USER:$ETCD_PASSWORD set $@; done
+    etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD set "$@"
+    while [ $? != 0 ]; do sleep 1; etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD set $@; done
 }
 
 function etcd-authget() {
-    etcdctl -u $ETCD_USER:$ETCD_PASSWORD get "$@"
+    etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get "$@"
     # "0" and "4" responses were successful, "4" means the key intentionally doesn't exist
-    while [[ $? != 0 && $? != 4 ]]; do sleep 1; etcdctl -u $ETCD_USER:$ETCD_PASSWORD get $@; done
+    while [[ $? != 0 && $? != 4 ]]; do sleep 1; etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get $@; done
 }
 function etcd-set() {
     etcdctl set "$@"

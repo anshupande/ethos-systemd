@@ -4,7 +4,7 @@ Requires=docker.service
 After=docker.service bootstrap.service
 
 [Service]
-Environment="IMAGE=etcdctl -u $ETCD_USER:$ETCD_PASSWORD get /images/jenkins"
+Environment="IMAGE=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /images/jenkins"
 EnvironmentFile=/etc/environment
 User=core
 Type=simple
