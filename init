@@ -13,13 +13,6 @@ sudo mkdir /etc/profile.d || :
 sudo cp ${SCRIPTDIR}/$VERSION/profile.d/* /etc/profile.d/. 2>/dev/null || :
 sudo cp --dereference ${SCRIPTDIR}/$VERSION/profile.d/${NODE_ROLE}/* /etc/profile.d/.
 
-CRED_DIR="/opt/etcdctl"
-if [[ ! -d $CRED_DIR ]]; then
-    sudo mkdir $CRED_DIR -p
-fi
-
-sudo chown -R $(whoami):$(whoami) $CRED_DIR
-
 source $SCRIPTDIR/$VERSION/lib/helpers.sh
 
 # Control tier - must form an etcd2 cluster first
@@ -37,12 +30,7 @@ function leader-setup() {
 
   LEADER="true"
 
-  curl  -L http://127.0.0.1:2379/v2/auth/enable -XGET > /opt/etcdctl/auth
-
-  if [[ $(echo "$(cat /opt/etcdctl/auth |jq '.enabled')" | sed -e 's/^"//'  -e 's/"$//') = false ]]; then
-    etcd-set /bootstrap.service/leader-status started; else
-    etcd-authset /bootstrap.service/leader-status started
-  fi
+  etcd-set /bootstrap.service/leader-status started
 
   for script in $(ls ${SCRIPTDIR}/$VERSION/setup/leader|grep -e '.sh$')
   do
@@ -51,13 +39,7 @@ function leader-setup() {
 
   echo "-------Leader node, writing finished flag to etcd-------"
 
-  curl  -L http://127.0.0.1:2379/v2/auth/enable -XGET > /opt/etcdctl/auth
-
-  if [[ $(echo "$(cat /opt/etcdctl/auth |jq '.enabled')" | sed -e 's/^"//'  -e 's/"$//') = false ]]; then
-    etcd-set /bootstrap.service/leader-status finished; else
-    etcd-authset /bootstrap.service/leader-status finished
-  fi
-
+  etcd-authset /bootstrap.service/leader-status finished
 
   echo "-------Leader node, leader is finished, continuing bootstrap-------"
 }
@@ -65,16 +47,7 @@ function leader-setup() {
 function follower-setup() {
   # Wait until etcd bootstrap value is set
   # This ensures that the etcd cluster is healthy and replicated on workers and proxy
-
-  curl  -L http://127.0.0.1:2379/v2/auth/enable -XGET > /opt/etcdctl/auth
-
-  if [[ $(echo "$(cat /opt/etcdctl/auth |jq '.enabled')" | sed -e 's/^"//'  -e 's/"$//') = false ]]; then
-    status=`etcd-set /bootstrap.service/leader-status finished`; else
-    status=`etcd-authset /bootstrap.service/leader-status finished`
-  fi
-
-
-  while [[ $status != "finished" ]]
+  while [[ $(etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /bootstrap.service/leader-status) != "finished" ]]
   do
     echo "-------Follower node, waiting for leader to finish script setup-------"
     sleep 10
@@ -90,13 +63,7 @@ function follower-setup() {
 }
 
 # Check the bootstrap process to see if this node should run the leader scripts
-
-curl  -L http://127.0.0.1:2379/v2/auth/enable -XGET > /opt/etcdctl/auth
-
-if [[ $(echo "$(cat /opt/etcdctl/auth |jq '.enabled')" | sed -e 's/^"//'  -e 's/"$//') = false ]]; then
-  etcdctl get /bootstrap.service/leader-status; else
-  etcdctl  -u $ROOT_USERNAME:$ROOT_PASSWORD get /bootstrap.service/leader-status
-fi
+etcdctl get /bootstrap.service/leader-status
 
 if [[ $? != 0 && "$NODE_ROLE" = "control" ]]; then
   # The election process follows the following algorithm:
