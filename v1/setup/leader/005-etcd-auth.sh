@@ -19,6 +19,9 @@ READ_PASSWORD=$(etcd-get /etcdctl/config/read-password)
 WRITE_USERNAME=$(etcd-get /etcdctl/config/write-user)
 WRITE_PASSWORD=$(etcd-get /etcdctl/config/write-password)
 
+echo "ROOT_USERNAME=$(etcd-get /etcdctl/config/root-user)" >> /etc/environment
+echo "ROOT_PASSWORD=$(etcd-get /etcdctl/config/root-password)" >> /etc/environment
+
 CRED_DIR="/opt/etcdctl"
 if [[ ! -d $CRED_DIR ]]; then
     sudo mkdir $CRED_DIR -p
