@@ -15,7 +15,7 @@ for line in $(cat $ENV_FILE|egrep -v $IGNORED); do
     value=${line#*=}
 
     etcdkey="$ETCD_PREFIX/$key"
-    etcd-authset $etcdkey $value
+    etcd-set $etcdkey $value
 done
 
 echo "-------Leader node, done writing environment variables to etcd-------"
