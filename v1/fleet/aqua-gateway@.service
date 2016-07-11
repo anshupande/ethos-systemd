@@ -16,6 +16,7 @@ Environment="SCALOCK_AUDIT_DBNAME=etcdctl get /aqua-audit/config/db-name"
 Environment="SCALOCK_AUDIT_DB_ENDPOINT=etcdctl get /aqua-audit/config/db-path"
 
 EnvironmentFile=/etc/environment
+Type=simple
 Restart=always
 RestartSec=8
 

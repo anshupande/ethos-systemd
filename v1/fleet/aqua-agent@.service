@@ -1,14 +1,19 @@
 [Unit]
 Description=Install Scalock Gateway @ %i
-After=docker.service bootstrap.service aqua-web@%i.service aqua-gateway@%i.service
+After=docker.service bootstrap.service
 Requires=docker.service
 
 
 [Service]
-User=core
-TimeoutStartSec=0
+EnvironmentFile=/etc/environment
 Environment="SCALOCK_TOKEN=etcdctl get /aqua/config/aqua-token"
 Environment="IMAGE=etcdctl get /images/scalock-agent"
+User=core
+Type=simple
+Restart=always
+RestartSec=4
+TimeoutStartSec=0
+
 
 ExecStartPre=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh"
 ExecStartPre=/usr/bin/sh -c \
@@ -33,6 +38,5 @@ ExecStop=-/usr/bin/docker stop aqua-agent
 WantedBy=multi-user.target
 
 [[X-Fleet]
-Global=false
-MachineMetadata=role=worker
-MachineMetadata=ip=%i
+Global=true
+
