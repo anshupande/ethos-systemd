@@ -1,5 +1,5 @@
 [Unit]
-Description=Install Scalock Gateway @ %i
+Description=Install Scalock agent @ %i
 After=docker.service bootstrap.service
 Requires=docker.service
 
@@ -15,7 +15,6 @@ RestartSec=4
 TimeoutStartSec=0
 
 
-ExecStartPre=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh"
 ExecStartPre=/usr/bin/sh -c \
 "if [[ -f /etc/profile.d/etcdctl.sh ]]; then source /etc/profile.d/etcdctl.sh;fi && docker pull $($IMAGE)"
 ExecStartPre=-/usr/bin/docker kill aqua-agent
