@@ -17,6 +17,8 @@ TimeoutStartSec=0
 
 ExecStartPre=/usr/bin/sh -c \
 "if [[ -f /etc/profile.d/etcdctl.sh ]]; then source /etc/profile.d/etcdctl.sh;fi && docker pull $($IMAGE)"
+ExecStartPre=/usr/bin/systemctl is-active update-os.service
+ExecStartPre=/usr/bin/systemctl is-active zk-health.service
 ExecStartPre=-/usr/bin/docker kill aqua-agent
 ExecStartPre=-/usr/bin/docker rm aqua-agent
 
