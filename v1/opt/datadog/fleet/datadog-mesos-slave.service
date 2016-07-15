@@ -8,12 +8,9 @@ After=docker.service bootstrap.service
 # CONTROL_ELB should be set in etcd
 # It should be run on all mesos slave nodes (worker tier nodes)
 # Look at adobeplatform/docker-dd-agent-mesos-slave for what ports those 3 should be running on
-<<<<<<< HEAD
 Environment="IMAGE=etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /images/dd-agent-mesos-slave"
-=======
 Environment="IMAGE=etcdctl get /images/dd-agent-mesos-slave"
 EnvironmentFile=/etc/environment
->>>>>>> master
 User=core
 Restart=always
 TimeoutStartSec=0
