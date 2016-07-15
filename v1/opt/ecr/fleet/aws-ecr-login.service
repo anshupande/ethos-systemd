@@ -26,7 +26,6 @@ ExecStart=/bin/bash -c \
     $($IMAGE) >/home/core/.dockercfg; \
     fi'
 ExecStart=/home/core/ethos-systemd/v1/opt/ecr/util/ecr-login.sh
->>>>>>> master
 ExecStop=/usr/bin/docker stop ecr-login
 
 [X-Fleet]
