@@ -16,6 +16,7 @@ echo "-------Leader node, beginning writing all default values to etcd-------"
 etcd-set /bootstrap.service/images-base-bootstrapped true
 
 etcd-set /images/secrets-downloader     "index.docker.io/behance/docker-aws-secrets-downloader:latest"
+etcd-set /images/klam-ssh               "index.docker.io/behance/klam-ssh:v1"
 
 etcd-set /bootstrap.service/images-control-bootstrapped true
 
@@ -26,6 +27,7 @@ etcd-set /images/mesos-master           "index.docker.io/mesosphere/mesos-master
 etcd-set /images/zk-exhibitor           "index.docker.io/behance/docker-zk-exhibitor:latest"
 etcd-set /images/cfn-signal             "index.docker.io/behance/docker-cfn-bootstrap:latest"
 etcd-set /images/jenkins                "index.docker.io/jenkins:1.651.1"
+etcd-set /images/booster                "index.docker.io/behance/booster:erl"
 
 etcd-set /bootstrap.service/images-proxy-bootstrapped true
 
@@ -111,6 +113,11 @@ etcd-set /zookeeper/config/password             "password"
 
 etcd-set /mesos/config/username ethos
 
+######################
+#       BOOSTER
+######################
+
+etcd-set /booster/config/enabled 0
 
 ######################
 #      SERVICES

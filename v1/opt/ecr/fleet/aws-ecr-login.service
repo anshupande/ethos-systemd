@@ -14,6 +14,7 @@ ExecStartPre=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh && docker pull $($
 ExecStartPre=-/usr/bin/docker kill ecr-login
 ExecStartPre=-/usr/bin/docker rm -f ecr-login
 # ecr-login fetches ECR creds and formats them correctly for .dockercfg
+<<<<<<< HEAD
 ExecStart=/bin/bash -c \
     'source /etc/profile.d/etcdctl.sh && \
     if [[ -n `etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get /ECR/config/registry-account` ]]; then \
@@ -25,6 +26,9 @@ ExecStart=/bin/bash -c \
     -e "REGISTRIES=`etcdctl -u $$ROOT_USERNAME:$ROOT_PASSWORD get /ECR/config/registry-account`" \
     $($IMAGE) >/home/core/.dockercfg; \
     fi'
+=======
+ExecStart=/home/core/ethos-systemd/v1/opt/ecr/util/ecr-login.sh
+>>>>>>> master
 ExecStop=/usr/bin/docker stop ecr-login
 
 [X-Fleet]

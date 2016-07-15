@@ -17,8 +17,10 @@ function etcd-authget() {
     while [[ $? != 0 && $? != 4 ]]; do sleep 1; etcdctl -u $ROOT_USERNAME:$ROOT_PASSWORD get $@; done
 }
 function etcd-set() {
-    etcdctl set "$@"
-    while [ $? != 0 ]; do sleep 1; etcdctl set $@; done
+    if [[ "$#" -gt 1 ]]; then
+      etcdctl set "$@"
+      while [ $? != 0 ]; do sleep 1; etcdctl set $@; done
+    fi
 }
 
 function etcd-get() {
