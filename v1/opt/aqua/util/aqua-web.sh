@@ -24,6 +24,7 @@ SCALOCK_TOKEN=$(etcdctl get /aqua/config/aqua-token)
 
 /usr/bin/sh -c "sudo docker run -p 8083:8080 \
    --name aqua-web --user=root \
+   -e SCALOCK_LOG_LEVEL=DEBUG \
    -e SCALOCK_DBUSER=$DB_USERNAME  \
    -e SCALOCK_DBPASSWORD=$DB_PASSWORD \
    -e SCALOCK_DBNAME=$SCALOCK_DB_NAME \
