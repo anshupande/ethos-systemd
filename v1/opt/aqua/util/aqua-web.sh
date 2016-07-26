@@ -31,3 +31,5 @@ SCALOCK_TOKEN=$(etcdctl get /aqua/config/aqua-token)
    -e BATCH_INSTALL_ENFORCE_MODE=y \
    -v /var/run/docker.sock:/var/run/docker.sock \
    $IMAGE"
+
+curl -H "Content-Type: application/json" -u administrator:`etcdctl get /aqua/config/password` -X POST -d '{"name":"core-user rule","description": "Core User is Admin of all containers","role":"administrator","resources":{"containers":["*"],"images":["*"],"volumes":["*"],"networks":["*"]},"accessors":{"users":["core"]}}' http://localhost:8083/api/v1/adminrules
