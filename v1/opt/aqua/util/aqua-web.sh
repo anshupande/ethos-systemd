@@ -13,13 +13,8 @@ SCALOCK_GATEWAY_ENDPOINT=$(etcdctl get /aqua/config/gateway-host)
 SCALOCK_AUDIT_DB_NAME=$(etcdctl get /aqua/config/db-audit-name)
 SCALOCK_TOKEN=$(etcdctl get /aqua/config/aqua-token)
 
-/usr/bin/sh -c "sudo docker run --rm -it -e PGPASSWORD=$DB_PASSWORD aquasec/database:1.2.tp2 psql -h $SCALOCK_DB_ENDPOINT -p 5432 -U $DB_USERNAME postgres -c \"drop database $SCALOCK_DB_NAME\""
-
-/usr/bin/sh -c "sudo docker run --rm -it -e PGPASSWORD=$DB_PASSWORD aquasec/database:1.2.tp2 psql -h $SCALOCK_DB_ENDPOINT -p 5432 -U $DB_USERNAME postgres -c \"drop database $SCALOCK_AUDIT_DB_NAME\""
-
 /usr/bin/sh -c "sudo docker run -p 8083:8080 \
    --name aqua-web --user=root \
-   -e SCALOCK_LOG_LEVEL=DEBUG \
    -e SCALOCK_DBUSER=$DB_USERNAME  \
    -e SCALOCK_DBPASSWORD=$DB_PASSWORD \
    -e SCALOCK_DBNAME=$SCALOCK_DB_NAME \

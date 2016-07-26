@@ -25,4 +25,4 @@ WantedBy=multi-user.target
 
 [[X-Fleet]
 Global=true
-MachineMetadata=role=worker
+
