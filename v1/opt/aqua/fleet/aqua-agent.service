@@ -23,6 +23,6 @@ ExecStop=-/usr/bin/docker stop aqua-agent
 [Install]
 WantedBy=multi-user.target
 
-[[X-Fleet]
+[X-Fleet]
 Global=true
 
