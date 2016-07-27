@@ -33,12 +33,12 @@ SCALOCK_TOKEN=$(etcdctl get /aqua/config/aqua-token)
    $IMAGE"
 
 # Wait for web ui to be active
-WEB_ACTIVE=$(curl http://localhost:8083|grep scalock)
+WEB_ACTIVE=$(curl http://localhost:8083/api|grep aqua)
 
 while [[ -z $WEB_ACTIVE ]]; do
   echo "Waiting for web UI to become active"
-  WEB_ACTIVE=$(curl http://localhost:8083|grep scalock)
-  sleep 300;
+  WEB_ACTIVE=$(curl http://localhost:8083/api|grep aqua)
+  sleep 5;
 done
 
 curl -H "Content-Type: application/json" -u administrator:`etcdctl get /aqua/config/password` -X POST -d '{"name":"core-user rule","description": "Core User is Admin of all containers","role":"administrator","resources":{"containers":["*"],"images":["*"],"volumes":["*"],"networks":["*"]},"accessors":{"users":["core"]}}' http://localhost:8083/api/v1/adminrules
