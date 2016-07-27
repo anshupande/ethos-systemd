@@ -37,7 +37,7 @@ WEB_ACTIVE=$(curl http://localhost:8081|grep scalock)
 
 while [[ -z $WEB_ACTIVE ]]; do
   echo "Waiting for web UI to become active"
-  WEB_ACTIVE=$(fleetctl list-units | grep aqua-web.service | grep active)
+  WEB_ACTIVE=$(curl http://localhost:8081|grep scalock)
   sleep 5;
 done
 
