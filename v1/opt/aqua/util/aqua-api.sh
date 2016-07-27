@@ -14,4 +14,4 @@ while [[ -z $WEB_ACTIVE ]]; do
   sleep 5;
 done
 
-curl -H "Content-Type: application/json" -u administrator:$SCALOCK_ADMIN_PASSWORD -X POST -d '{"name":"core-user rule","description": "Core User is Admin of all containers","role":"administrator","resources":{"containers":["*"],"images":["*"],"volumes":["*"],"networks":["*"]},"accessors":{"users":["core"]}}' http://localhost:8083/api/v1/adminrules
+sudo curl -H "Content-Type: application/json" -u administrator:$SCALOCK_ADMIN_PASSWORD -X POST -d '{"name":"core-user rule","description": "Core User is Admin of all containers","role":"administrator","resources":{"containers":["*"],"images":["*"],"volumes":["*"],"networks":["*"]},"accessors":{"users":["core"]}}' http://localhost:8083/api/v1/adminrules
