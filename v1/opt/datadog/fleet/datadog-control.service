@@ -20,7 +20,7 @@ ExecStart=/usr/bin/bash -c \
 "if [[ -f /etc/profile.d/etcdctl.sh ]]; then source /etc/profile.d/etcdctl.sh;fi && sudo -E /usr/bin/docker run --name dd-agent-control -h `hostname` \
 -p 8125:8125/udp \
 -v /var/run/docker.sock:/var/run/docker.sock \
--v /proc/:/host/proc/:Z \
+-v /proc/:/host/proc/:roZ \
 -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
 -e API_KEY=`etcdctl get /datadog/config/api-key` \
 -e MESOS_HOST=`etcdctl get /environment/CONTROL_ELB` \
