@@ -13,7 +13,11 @@ source /etc/profile.d/etcdctl.sh || :
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $DIR/../../lib/helpers.sh
 
-CREDS="$(etcd-get /mesos/config/username) $(etcd-get /mesos/config/password)"
+MESOS_USERNAME=$(etcd-get /mesos/config/usename)
+MESOS_PASSWORD=$(etcd-get /mesos/config/password)
+
+CREDS="$MESOS_USERNAME $MESOS_PASSWORD"
+
 
 CRED_DIR="/opt/mesos"
 if [[ ! -d $CRED_DIR ]]; then
@@ -23,6 +27,7 @@ fi
 # primary credentials used by workers & masters
 sudo echo "$CREDS" > $CRED_DIR/credentials
 
+
 if [[ "${NODE_ROLE}" = "control" ]]; then
     # on a control node - set up credentials for registering frameworks
     # (i.e.: marathon & chronos)
@@ -30,6 +35,16 @@ if [[ "${NODE_ROLE}" = "control" ]]; then
     sudo echo -n "$CREDS" >> $CRED_DIR/credentials
     sudo echo -n "$(etcd-get /mesos/config/password)" > $CRED_DIR/framework-secret
     sudo mv /home/core/ethos-systemd/v1/opt/acls $CRED_DIR/
+    sudo echo '
+{
+ "credentials": [
+  {
+   "principal": "'$MESOS_USERNAME'",
+   "secret": "'$MESOS_PASSWORD'"
+  }
+ ]
+}
+         ' >  $CRED_DIR/$MESOS_USERNAME
     sudo chmod 0600 $CRED_DIR/framework-secret
 fi
 
