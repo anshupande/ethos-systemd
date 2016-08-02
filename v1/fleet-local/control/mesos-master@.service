@@ -30,6 +30,7 @@ ExecStart=/usr/bin/bash -c "sudo docker run \
   --net=host \
   -v /var/lib/mesos/master:/var/lib/mesos/master \
   -v /opt/mesos/credentials:/opt/mesos/credentials:ro \
+  -v /opt/mesos/acls:/opt/mesos/acls:ro \
   $($IMAGE) \
   --authenticate_slaves \
   --authenticate \
