@@ -29,7 +29,7 @@ if [[ "${NODE_ROLE}" = "control" ]]; then
     # TODO: have separate credentials for framework vs worker/master
     sudo echo -n "$CREDS" >> $CRED_DIR/credentials
     sudo echo -n "$(etcd-get /mesos/config/password)" > $CRED_DIR/framework-secret
-    sudo mv /opt/acls $CRED_DIR/
+    sudo mv /home/core/ethos-systemd/v1/opt/acls $CRED_DIR/
     sudo chmod 0600 $CRED_DIR/framework-secret
 fi
 
