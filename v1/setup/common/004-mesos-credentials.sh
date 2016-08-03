@@ -44,7 +44,7 @@ if [[ "${NODE_ROLE}" = "control" ]]; then
   }
  ]
 }
-         ' >  $CRED_DIR/$MESOS_USERNAME
+         ' >  $CRED_DIR/ethos
     sudo chmod 0600 $CRED_DIR/framework-secret
 fi
 
