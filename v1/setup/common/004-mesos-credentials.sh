@@ -13,7 +13,7 @@ source /etc/profile.d/etcdctl.sh || :
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $DIR/../../lib/helpers.sh
 
-MESOS_USERNAME=$(etcd-get /mesos/config/usename)
+MESOS_USERNAME=$(etcd-get /mesos/config/username)
 MESOS_PASSWORD=$(etcd-get /mesos/config/password)
 
 CREDS="$MESOS_USERNAME $MESOS_PASSWORD"
