@@ -27,7 +27,6 @@ fi
 # primary credentials used by workers & masters
 sudo echo "$CREDS" > $CRED_DIR/credentials
 
-
 if [[ "${NODE_ROLE}" = "control" ]]; then
     # on a control node - set up credentials for registering frameworks
     # (i.e.: marathon & chronos)
@@ -35,14 +34,6 @@ if [[ "${NODE_ROLE}" = "control" ]]; then
     sudo echo -n "$CREDS" >> $CRED_DIR/credentials
     sudo echo -n "$(etcd-get /mesos/config/password)" > $CRED_DIR/framework-secret
     sudo mv /home/core/ethos-systemd/v1/opt/acls $CRED_DIR/
-    sudo echo '
-{
- "credentials": [{
-   "principal": "'$MESOS_USERNAME'",
-   "secret": "'$MESOS_PASSWORD'"
-  }]
-}
-         ' >  $CRED_DIR/ethos
     sudo chmod 0600 $CRED_DIR/framework-secret
 fi
 
