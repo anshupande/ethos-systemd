@@ -37,12 +37,10 @@ if [[ "${NODE_ROLE}" = "control" ]]; then
     sudo mv /home/core/ethos-systemd/v1/opt/acls $CRED_DIR/
     sudo echo '
 {
- "credentials": [
-  {
+ "credentials": [{
    "principal": "'$MESOS_USERNAME'",
    "secret": "'$MESOS_PASSWORD'"
-  }
- ]
+  }]
 }
          ' >  $CRED_DIR/ethos
     sudo chmod 0600 $CRED_DIR/framework-secret
