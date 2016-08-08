@@ -10,7 +10,7 @@ Environment="IMAGE=etcdctl get /images/scalock-agent"
 Environment="SCALOCK_GATEWAY_ENDPOINT=etcdctl get /aqua/config/gateway-host"
 
 User=core
-Type=simple
+Type=oneshot
 TimeoutStartSec=10m
 
 ExecStartPre=/usr/bin/systemctl is-active update-os.service
