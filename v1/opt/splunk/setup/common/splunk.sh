@@ -2,34 +2,98 @@
 source /etc/environment
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $DIR/../../../../lib/helpers.sh 
-SPLUNK_FORWARD_SERVER_LIST=$(etcd-get /splunk/config/forward-server-list)
-SPLUNK_SSLPASSWORD=$(etcd-get /splunk/config/sslpassword)
 SPLUNK_DIR="/opt/splunk/etc/system/local"
+SPLUNK_ENABLE_SECOPS_FORWARDER=$(etcd-get /splunk/config/enable-secops-forwarder)
+SPLUNK_ENABLE_CLOUDOPS_FORWARDER=$(etcd-get /splunk/config/enable-cloudops-forwarder)
+SPLUNK_FORWARD_SECOPS_SERVER_LIST=$(etcd-get /splunk/config/forward-secops-server-list)
+SPLUNK_FORWARD_CLOUDOPS_SERVER_LIST=$(etcd-get /splunk/config/forward-cloudops-server-list)
+SPLUNK_SECOPS_SSLPASSWORD=$(etcd-get /splunk/config/secops-sslpassword)
+SPLUNK_CLOUDOPS_SSLPASSWORD=$(etcd-get /splunk/config/cloudops-sslpassword)
+SPLUNK_SECOPS_INDEX=$(etcd-get /splunk/config/secops-index)
+SPLUNK_CLOUDOPS_INDEX=$(etcd-get /splunk/config/cloudops-index)
+SPLUNK_FORWARDER_HOST=`curl -s http://169.254.169.254/latest/meta-data/hostname`
+
 
 #create splunk configuration directory
 mkdir -p $SPLUNK_DIR
 #generate/fetch secure certs in configurations directory
-cat << EOF > /$SPLUNK_DIR/adobecaas.crt
-$(etcd-get /splunk/config/adobecaas-cert | awk '{gsub(/\\n/,"\n")}1')
+cat << EOF > /$SPLUNK_DIR/secopsCA.crt
+$(etcd-get /splunk/config/secopsca-cert | awk '{gsub(/\\n/,"\n")}1')
 EOF
 
-cat << EOF > /$SPLUNK_DIR/genericForwarder.pem
-$(etcd-get /splunk/config/ca-cert | awk '{gsub(/\\n/,"\n")}1')
+cat << EOF > /$SPLUNK_DIR/secopsForwarder.pem
+$(etcd-get /splunk/config/secopsforwarder-cert | awk '{gsub(/\\n/,"\n")}1')
 EOF
 
+
+cat << EOF > /$SPLUNK_DIR/cloudopsCA.crt
+$(etcd-get /splunk/config/cloudopsca-cert | awk '{gsub(/\\n/,"\n")}1')
+EOF
+
+cat << EOF > /$SPLUNK_DIR/cloudopsForwarder.pem
+$(etcd-get /splunk/config/cloudopsforwarder-cert | awk '{gsub(/\\n/,"\n")}1')
+EOF
+#set default groups, default to genericForwarder if cloudops and secops enabled then set if cloudops enabled onyl.
+DEFAULTGROUP="splunkssl-genericForwarder"
+if [ "$SPLUNK_ENABLE_ClOUDOPS_FORWARDER" == "1" ]; then
+  DEFAULTGROUP="splunkssl-secondaryForwarder"
+fi
+if [ "$SPLUNK_ENABLE_SECOPS_FORWARDER" == "1" ] && [ "$SPLUNK_ENABLE_SECOPS_FORWARDER" == "1" ]; then
+  DEFAULTGROUP="splunkssl-genericForwarder,splunkssl-secondaryForwarder"
+fi
 #generate configurtion outputs file
+if [ "$SPLUNK_ENABLE_SECOPS_FORWARDER" == "1" ] || [ "$SPLUNK_ENABLE_CLOUDOPS_FORWARDER" == "1" ]; then
 cat << EOF > /$SPLUNK_DIR/outputs.conf
 [tcpout]
-defaultGroup = splunkssl-genericForwarder
+defaultGroup = $DEFAULTGROUP
 maxQueueSize = 7MB
 useACK = true
 autoLB = true
+EOF
 
+cat << EOF > /$SPLUNK_DIR/inputs.conf
+[default]
+host = $SPLUNK_FORWARDER_HOST
+connection_host = none
+sourcetype = journald
+EOF
+fi
+
+if [ "$SPLUNK_ENABLE_SECOPS_FORWARDER" == "1" ]; then
+cat << EOF >> /$SPLUNK_DIR/outputs.conf
 
 [tcpout:splunkssl-genericForwarder]
-server = $SPLUNK_FORWARD_SERVER_LIST
-sslCertPath = /opt/splunk/etc/system/local/genericForwarder.pem
-sslRootCAPath = /opt/splunk/etc/system/local/adobecaas.crt
-sslPassword = $SPLUNK_SSLPASSWORD
+server = $SPLUNK_FORWARD_SECOPS_SERVER_LIST
+sslCertPath = /opt/splunk/etc/system/local/secopsForwarder.pem
+sslRootCAPath = /opt/splunk/etc/system/local/secopsCA.crt
+sslPassword = $SPLUNK_SECOPS_SSLPASSWORD
 sslVerifyServerCert = false
 EOF
+
+cat << EOF >> /$SPLUNK_DIR/inputs.conf
+
+[udp://1514]
+_TCP_ROUTING = splunkssl-genericForwarder
+index=$SPLUNK_SECOPS_INDEX
+EOF
+fi
+
+if [ "$SPLUNK_ENABLE_CLOUDOPS_FORWARDER" == "1" ]; then
+cat << EOF >> /$SPLUNK_DIR/outputs.conf
+
+[tcpout:splunk-secondaryForwarder]
+server = $SPLUNK_FORWARD_CLOUDOPS_SERVER_LIST
+sslCertPath = /opt/splunk/etc/system/local/cloudopsForwarder.pem
+sslRootCAPath = /opt/splunk/etc/system/local/cloudopsCA.crt
+sslPassword = $SPLUNK_CLOUDOPS_SSLPASSWORD
+sslVerifyServerCert = false
+EOF
+
+cat << EOF >> /$SPLUNK_DIR/inputs.conf
+
+[udp://1515]
+_TCP_ROUTING = splunkssl-secondaryForwarder
+index=$SPLUNK_CLOUDOPS_INDEX
+EOF
+fi
+

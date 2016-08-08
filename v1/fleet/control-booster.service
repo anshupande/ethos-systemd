@@ -4,6 +4,7 @@ Requires=docker.service
 After=docker.service
 
 [Service]
+TimeoutStartSec=10m
 User=core
 Restart=on-failure
 Environment="IMAGE=etcdctl get /images/booster"
@@ -27,7 +28,11 @@ ExecStartPre=-/usr/bin/docker rm booster
 ExecStart=/usr/bin/sh -c "/usr/bin/docker run \
   --name booster \
   --net=host \
+<<<<<<< HEAD
   --read-only \
+=======
+  -e BOOSTER_NO_PERSISTENCE=true \
+>>>>>>> master
   -e BOOSTER_ROLES=control_tier \
   -e BOOSTER_ENABLED=$(etcdctl get /booster/config/enabled) \
   -e BOOSTER_NODES=$(etcdctl ls /booster/nodes | cut -d'/' --complement -s -f-3 | tr '\n' ',') \
