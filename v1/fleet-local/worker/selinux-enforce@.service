@@ -1,5 +1,5 @@
 [Unit]
-Description=Make SELinux enforcement permanent
+Description=SELinux @ %i
 After=docker.service bootstrap.service
 Requires=docker.service
 
