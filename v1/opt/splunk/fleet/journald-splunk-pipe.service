@@ -6,7 +6,7 @@ Wants=splunk-journald.service
 EnvironmentFile=/etc/environment
 Environment="INSTANCEID=curl -s http://169.254.169.254/latest/meta-data/ami-id"
 Environment="HOSTNAME=curl -s http://169.254.169.254/latest/meta-data/hostname"
-Environment="STACK_NAME=etcdctl get /environment/STACK_NAME"
+Environment="STACK_NAME=/home/core/ethos-systemd/v1/lib/etcdauth.sh get /environment/STACK_NAME"
 TimeoutStartSec=0
 Restart=always
 RestartSec=5s

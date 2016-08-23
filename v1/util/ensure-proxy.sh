@@ -1,7 +1,8 @@
 #!/usr/bin/bash -x
 
+source /etc/environment
 source /etc/profile.d/etcdctl.sh
-PROXY=$(etcdctl get /capcom/config/proxy)
+PROXY=$(/home/core/ethos-systemd/v1/lib/etcdauth.sh get /capcom/config/proxy)
 
 if [ -f /etc/$PROXY/nginx.conf ]; then exit 0; fi
 

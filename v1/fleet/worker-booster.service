@@ -7,7 +7,8 @@ After=docker.service
 TimeoutStartSec=10m
 User=core
 Restart=on-failure
-Environment="IMAGE=etcdctl get /images/booster"
+EnvironmentFile=/etc/environment
+Environment="IMAGE=/home/core/ethos-systemd/v1/lib/etcdauth.sh get /images/booster"
 
 ExecStartPre=/usr/bin/bash -c "[ -f /home/core/.dockercfg ] || exit 1"
 ExecStartPre=/usr/bin/bash -c "[ -f /opt/mesos/credentials ] || exit 1"
@@ -22,8 +23,8 @@ ExecStart=/usr/bin/sh -c ". /etc/profile.d/etcdctl.sh && /usr/bin/docker run \
   --name booster \
   --net=host \
   -e BOOSTER_NO_PERSISTENCE=true \
-  -e BOOSTER_ENABLED=$(etcdctl get /booster/config/enabled) \
-  -e BOOSTER_NODES=$(etcdctl ls /booster/nodes | cut -d'/' --complement -s -f-3 | tr '\n' ',') \
+  -e BOOSTER_ENABLED=$(/home/core/ethos-systemd/v1/lib/etcdauth.sh get /booster/config/enabled) \
+  -e BOOSTER_NODES=$(/home/core/ethos-systemd/v1/lib/etcdauth.sh ls /booster/nodes | cut -d'/' --complement -s -f-3 | tr '\n' ',') \
   -e BOOSTER_ROLES=mesos_agent \
   $($IMAGE)"
 
