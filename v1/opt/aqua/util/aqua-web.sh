@@ -29,6 +29,7 @@ SCALOCK_TOKEN=$(etcdctl get /aqua/config/aqua-token)
    -e BATCH_INSTALL_NAME=Local-Agents \
    -e BATCH_INSTALL_GATEWAY=$SCALOCK_GATEWAY_ENDPOINT \
    -e BATCH_INSTALL_ENFORCE_MODE=y \
+   -e SCALOCK_LOG_LEVEL=DEBUG \
    -v /var/run/docker.sock:/var/run/docker.sock \
    $IMAGE"
 
