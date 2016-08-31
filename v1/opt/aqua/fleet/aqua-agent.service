@@ -1,5 +1,5 @@
 [Unit]
-Description=AquaAgent @ %i
+Description=AquaAgent
 After=docker.service bootstrap.service
 Requires=docker.service
 

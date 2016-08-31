@@ -1,5 +1,5 @@
 [Unit]
-Description=run aqua ui and api
+Description=AquaWeb
 After=docker.service bootstrap.service
 Requires=docker.service
 

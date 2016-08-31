@@ -31,7 +31,7 @@ SCALOCK_LICENSE=$(etcdctl get /aqua/config/aqua-license)
    -e BATCH_INSTALL_GATEWAY=$SCALOCK_GATEWAY_ENDPOINT \
    -e BATCH_INSTALL_ENFORCE_MODE=y \
    -e SCALOCK_LOG_LEVEL=DEBUG \
-   -e LICENSE_TOKEN=$SCALOCK_LICENSE \
+   -e LICENSE_TOKEN=\"$SCALOCK_LICENSE\" \
    -v /var/run/docker.sock:/var/run/docker.sock \
    $IMAGE"
 
