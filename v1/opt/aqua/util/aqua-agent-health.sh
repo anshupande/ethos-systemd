@@ -1,5 +1,10 @@
 #!/usr/bin/bash -x
 
+# Check if aqua is installed as optional service
+
+if [[ $(etcdctl get /environment/services |grep aqua) != *aqua* ]]; then   exit 0; fi
+
+# Check if aqua agent is healthy
 
 ERR=1 # or some non zero error number you want
 MAX_TRIES=10
