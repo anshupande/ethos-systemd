@@ -1,17 +1,15 @@
 #!/usr/bin/bash
 
-<<<<<<< HEAD
 source /etc/environment
 
 IMAGE=$(/home/core/ethos-systemd/v1/lib/etcdauth.sh get /images/flight-director)
-=======
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source /etc/environment
 source $DIR/../lib/helpers.sh
 
 IMAGE=$(etcdctl get /images/flight-director)
->>>>>>> master
 
 #only set SCALER_ENDPOINT id booster is enabled
 SCALER_ENDPOINT=""
