@@ -1,14 +1,37 @@
 #!/usr/bin/bash
 
+<<<<<<< HEAD
 source /etc/environment
 
 IMAGE=$(/home/core/ethos-systemd/v1/lib/etcdauth.sh get /images/flight-director)
+=======
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source /etc/environment
+source $DIR/../lib/helpers.sh
+
+IMAGE=$(etcdctl get /images/flight-director)
+>>>>>>> master
 
 #only set SCALER_ENDPOINT id booster is enabled
 SCALER_ENDPOINT=""
 if [ "$(/home/core/ethos-systemd/v1/lib/etcdauth.sh get /booster/config/enabled)" == "1" ]
 then
   SCALER_ENDPOINT=`/home/core/ethos-systemd/v1/lib/etcdauth.sh get /flight-director/config/scaler-endpoint`
+fi
+
+#only set Aqua endpoints for FD if Aqua is enabled
+if [[ "$(etcdctl get /environment/services)" == *"aqua"* ]]
+then
+  AQUA_URL=`etcdctl get /aqua/config/gateway-external`
+  uri_parser $AQUA_URL
+
+  AQUA_PROTOCOL=$uri_schema
+  AQUA_ENDPOINT=$uri_address
+  AQUA_USER=`etcdctl get /aqua/config/user`
+  AQUA_PASSWORD=`etcdctl get /aqua/config/password`
+else
+  AQUA_ENDPOINT=""
 fi
 
 
@@ -44,4 +67,8 @@ fi
   -e FD_ALLOW_MARATHON_UNVERIFIED_TLS=`/home/core/ethos-systemd/v1/lib/etcdauth.sh get /flight-director/config/allow-marathon-unverified-tls` \
   -e FD_SCALER_PROTOCOL=`/home/core/ethos-systemd/v1/lib/etcdauth.sh get /flight-director/config/scaler-protocol` \
   -e FD_SCALER_ENDPOINT=$SCALER_ENDPOINT \
+  -e FD_AQUA_PROTOCOL=$AQUA_PROTOCOL \
+  -e FD_AQUA_ENDPOINT=$AQUA_ENDPOINT \
+  -e FD_AQUA_USER=$AQUA_USER \
+  -e FD_AQUA_PASSWORD=$AQUA_PASSWORD \
   $IMAGE
