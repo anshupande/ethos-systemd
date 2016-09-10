@@ -24,6 +24,9 @@ sudo docker run --rm --name aqua-agent \
 -e SILENT=yes  \
 -v /var/run/docker.sock:/var/run/docker.sock  $($IMAGE)"
 
+ExecStartPost=/home/core/ethos-systemd/v1/opt/aqua/util/aqua-agent-health.sh
+ExecStartPost=/usr/bin/sudo reboot
+
 ExecStop=-/usr/bin/docker stop aqua-agent
 
 [Install]
