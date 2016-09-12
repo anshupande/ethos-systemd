@@ -2,7 +2,6 @@
 Description=AquaAgent
 After=docker.service bootstrap.service
 Requires=docker.service
-DOCKER_SCHEDULER=fleet
 
 [Service]
 EnvironmentFile=/etc/environment
@@ -23,6 +22,7 @@ sudo docker run --rm --name aqua-agent \
 -e SCALOCK_SERVER=$($SCALOCK_GATEWAY_ENDPOINT) \
 -e SCALOCK_TOKEN=$($SCALOCK_TOKEN)  \
 -e SILENT=yes  \
+e DOCKER_SCHEDULER=fleet \
 -v /var/run/docker.sock:/var/run/docker.sock  $($IMAGE)"
 
 ExecStop=-/usr/bin/docker stop aqua-agent
