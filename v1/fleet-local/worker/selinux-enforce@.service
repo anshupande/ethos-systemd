@@ -9,7 +9,11 @@ EnvironmentFile=/etc/environment
 User=core
 Type=oneshot
 RemainAfterExit=false
-ExecStart=/usr/bin/sudo bash /home/core/ethos-systemd/v1/util/selinux.sh
+
+ExecStartPre=/usr/bin/sh -c "source /etc/profile.d/etcdctl.sh"
+
+ExecStart=/usr/bin/bash -c \
+"if [[ '$(etcdctl get /environment/services |grep sumologic)' != *sumologic* ]]; then sudo /home/core/ethos-systemd/v1/util/selinux.sh;fi"
 
 
 [X-Fleet]
