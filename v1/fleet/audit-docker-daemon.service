@@ -1,6 +1,7 @@
 [Unit]
 Description=Audit Docker Daemon
-After=docker.service bootstrap.service
+Before=bootstrap.service
+After=docker.service
 Requires=docker.service
 
 [Service]
